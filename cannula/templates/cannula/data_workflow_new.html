@@ -1,0 +1,14 @@
+{% extends "cannula/base.html" %}
+
+{% block title %}New Workflow{% endblock %}
+
+{% block content %}
+<div class="w3-panel">
+<form enctype="multipart/form-data" method="post" action="">
+{% csrf_token %}
+    {{ form }}
+<input type="submit" value="Upload to Workflow" />
+</form>
+</div>
+{% endblock %}
+

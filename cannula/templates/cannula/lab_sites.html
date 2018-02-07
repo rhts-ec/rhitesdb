@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>{% load staticfiles %}
+<head>
+	<style type="text/css">
+		.sparkline { display: none; width: 6em; height: 1ex;}
+		.sparkline_bar { display: none; width: 6em; height: 1ex;}
+		body { font-family: sans-serif; font-size: 12px; }
+		td.disabled_cell { background-color: rgb(200, 200, 200); }
+		@media print {
+			.no-print, .no-print * { display: none !important; }
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="{% static 'cannula/w3.css' %}" />
+	<script language="javascript" src="{% static 'cannula/viz_annotations.js' %}"></script>
+	<title>Lab. (sites)</title>
+</head>
+<body>
+<h2>Laboratory Tests - By Sites scorecard</h2>
+<h3>{{ period_desc }} ({{ request.GET.period }})</h3>
+
+<div class="w3-bar w3-row-padding no-print">
+<form class="w3-bar-item" style="width:75%" action="{% url 'lab_sites' %}">
+<div class="w3-cell w3-quarter">
+<input class="w3-input w3-border" type="text">
+<label>Location</label>
+</div>
+<div class="w3-cell w3-quarter">
+<select class="w3-input w3-border" name="period">
+	{% for p in period_list %}
+	{% if p == request.GET.period %}
+	<option selected="selected">{{ p }}</option>
+	{% else %}
+	<option>{{ p }}</option>
+	{% endif %}
+	{% endfor %}
+</select>
+<label>Period</label>
+</div>
+<div class="w3-cell w3-quarter">
+<select class="w3-input w3-border">
+	<option>All districts</option>
+	<option>RHITES EC districts only</option>
+</select>
+<label>Coverage</label>
+</div>
+<div class="w3-cell w3-cell-bottom w3-quarter">
+<button class="w3-button w3-round-xxlarge w3-blue">Filter</button>
+</div>
+</form>
+</div>
+
+<div class="w3-bar-item w3-right">
+<table class="w3-table w3-border w3-bordered" border="1">
+	<thead>
+		<tr><th>Legend</th></tr>
+	</thead>
+	<tbody>
+		<tr><td class="w3-green w3-right-align">60+%</td></tr>
+		<tr><td class="w3-light-green w3-right-align">&ge;40 &amp; &lt;60%</td></tr>
+		<tr><td class="w3-yellow w3-right-align">&ge;25 &amp; &lt;40%</td></tr>
+		<tr><td class="w3-orange w3-right-align">&lt;25%</td></tr>
+	</tbody>
+</table>
+</div>
+
+<div class="w3-container">
+	{{ tt }}
+	<table class="w3-table w3-border w3-bordered" border="1">
+	<thead class="w3-gray">
+	<tr>
+		<th class="w3-center" rowspan="2">District</th>
+		<th class="w3-center" rowspan="2">Subcounty</th>
+		<th class="w3-center" rowspan="2">Facility</th>
+		{% for de_name, cat_combo in data_element_names %}
+		{% if cat_combo %}
+		<th class="w3-center">{{ de_name }}</th>
+		{% else %}
+		<th class="w3-center" rowspan="2">{{ de_name }}</th>
+		{% endif %}
+		{% endfor %}
+	</tr>
+	<tr>
+		{% for de_name, cat_combo in data_element_names %}
+		{% if cat_combo %}
+		<th class="w3-center">{{ cat_combo }}</th>
+		{% endif %}
+		{% endfor %}
+	</tr>
+	</thead>
+	<tbody>
+	{% comment %}
+	{% for val in val_dicts %}
+	<tr>
+		<td>{{val.district}}</td>
+		<td>{{val.subcounty}}</td>
+		<td>{{val.facility}}</td>
+		<td>{{val}}</td>
+	</tr>
+	{% endfor %}
+	{% endcomment %}
+
+	{% for org_path,group in grouped_data %}
+	<tr>
+		{% for op in org_path %}
+		<td>{{ op }}</td>
+		{% endfor %}
+		{% for x in group %}
+		{% if forloop.counter0 >= 15 %}
+		{% endif %}
+		{% if x.de_name == 'Perf% Circumcised' or  x.de_name == 'Perf% Circumcised DC' or x.de_name == 'Perf% Circumcised Surgical' %}
+		<td class="w3-right-align green_yellow_orange_60_40_25_unbounded">{{ x.numeric_sum|floatformat }}</td>
+		{% else %}
+		<td class="w3-right-align">{{ x.numeric_sum|floatformat }}</td>
+		{% endif %}
+		{% endfor %}
+	</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+</div>
+</body>
+</html>

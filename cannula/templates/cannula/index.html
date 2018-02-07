@@ -1,0 +1,34 @@
+{% extends "cannula/base.html" %}
+{% block title %}RHITES-EC Data Verification - Home{% endblock %}
+{% block content %}
+<h4>Scorecards</h4>
+<ul>
+	<li><a href="{% url 'malaria_compliance' %}">Malaria - Compliance</a></li>
+	<li><a href="{% url 'ipt_quarterly' %}?ou_level=2&period=2017-Q2">Malaria - IPT</a></li>
+</ul>
+
+<ul>
+	<li><a href="{% url 'hts_sites' %}">HTS - Sites</a></li>
+	<li><a href="{% url 'hts_districts' %}">HTS - Districts</a></li>
+</ul>
+
+<ul>
+	<li><a href="{% url 'vmmc_sites' %}">VMMC - Sites</a></li>
+</ul>
+
+<ul>
+	<li><a href="{% url 'lab_sites' %}">Lab. Tests - Sites</a></li>
+</ul>
+
+<h4>Validation Reports</h4>
+<ul>
+{% for id, name in validation_rules %}
+	<li><a href="{% url 'validation_rule' %}?id={{id}}&exclude_true">{{name}}</a></li>
+{% endfor %}
+</ul>
+
+<h4>Workflows</h4>
+<p>
+	<a href="{% url 'data_workflow_listing' %}">Create/Edit/View Data Workflows</a>
+</p>
+{% endblock %}

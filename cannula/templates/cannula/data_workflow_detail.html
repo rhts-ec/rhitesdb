@@ -1,0 +1,45 @@
+{% extends "cannula/base.html" %}
+{% load l10n %}
+
+{% block title %}Workflow Details{% endblock %}
+
+{% block content %}
+<h4>Workflow source: {{ srcdoc.orig_filename}} (Uploaded: {{srcdoc.uploaded_at}})</h4>
+<a href="{% url 'data_workflow_listing' %}">Back to list of Data Workflows</a>
+
+<form method="post" id="workflow_actions">{% csrf_token %}
+<div class="w3-panel">
+<p>Individual Data Values: {{ num_values|localize }}</p>
+
+<p>
+Data Elements
+<ul style="column-count: 3">
+	{% for de in data_elements %}
+	<li>
+		{{ de.name }} {% if de.alias %}<i>[aliased as "{{ de.alias }}"]</i>{% endif %}
+		<a href="{% url 'data_element_alias' %}?de_id={{ de.id }}&wf_id={{ request.GET.wf_id }}">Edit Alias</a>
+	</li>
+	{% empty %}
+	<li>
+		<button type="submit" form="workflow_actions" name="load_values">Load Data Elements/Values</button>
+	</li>
+	{% endfor %}
+</ul>
+</p>
+
+<div>
+Validation Rules
+<ul style="column-count: 3">
+	{% for rule in validation_rules %}
+	<li>{{ rule.name }}: "{{ rule.expression }}"</li>
+	{% empty %}
+	{% if data_elements|length > 0 %}
+	<li>
+		<button type="submit" form="workflow_actions" name="load_validations">Load Validation Rules</button>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+</!DOCTYPE html>
+<html>
+<head>
+	<title>{{ rule.name }} - Validation Rule Check</title>
+	<style type="text/css">
+		.sparkline { display: none; width: 6em; height: 1ex;}
+		.sparkline_bar { display: none; width: 6em; height: 1ex;}
+		body { font-family: sans-serif; font-size: 12px; }
+		td.disabled_cell { background-color: rgb(200, 200, 200); }
+		@media print {
+			.no-print, .no-print * { display: none !important; }
+		}
+	</style>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'cannula/w3.css' %}" />
+	<script language="javascript" src="{% static 'cannula/viz_annotations.js' %}"></script>
+</head>
+<body>
+<h2>{{ rule.name }} - Validation Rule Check</h2>
+<h3>{ {{ rule.expression }} }</h3>
+
+<div class="w3-container">
+<span class="w3-small no-print">
+<!-- Use javascript with location.replace to stop clicks from adding to the back/forward buttons -->
+Toggle Validation Successes:
+{% if 'exclude_true' in request.GET %}
+<!-- <a onclick="window.location.replace('{% url 'validation_rule' %}?id={{ rule.id }}'); return false" href="">Show Validation Successes</a> -->
+<button onclick="window.location.replace('{% url 'validation_rule' %}?id={{ rule.id }}'); return false">Show</button>
+{% else %}
+<!-- <a onclick="window.location.replace('{% url 'validation_rule' %}?id={{ rule.id }}&exclude_true'); return false" href="">Hide Validation Successes</a> -->
+<button onclick="window.location.replace('{% url 'validation_rule' %}?id={{ rule.id }}&exclude_true'); return false">Hide</button>
+{% endif %}
+</span>
+
+<table class="w3-table w3-border w3-bordered w3-small" border="1">
+<thead class="w3-gray">
+<tr>
+	<th class="w3-center" rowspan="2">Period</th>
+	<th class="w3-center" rowspan="2">District</th>
+	<th class="w3-center" rowspan="2">Subcounty</th>
+	<th class="w3-center" rowspan="2">Facility</th>
+	<th class="w3-center" rowspan="2">Validates?</th>
+</tr>
+</thead>
+{% for row in results %}
+<tr>
+	<td>{% firstof row.month row.quarter row.year %}</td>
+	<td>{{ row.district }}</td>
+	<td>{{ row.subcounty }}</td>
+	<td>{{ row.facility }}</td>
+	<td {% if row.de_calc_1 %}class="w3-green"{% else %}class="w3-red"{% endif %}><b>{{ row.de_calc_1 }}</b>
+	{% if not row.de_calc_1 %}
+	{% for de_name, val in row.data_values.items %}
+	<br/>{{  de_name }}: {{ val }}
+	{% endfor %}
+	{% endif %}
+	</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</body>
+</html>

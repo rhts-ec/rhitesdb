@@ -1,0 +1,13 @@
+{% extends "cannula/base.html" %}
+
+{% block title %}Edit Alias{% endblock %}
+
+{% block content %}
+<div class="w3-panel">
+<form enctype="multipart/form-data" method="post">
+{% csrf_token %}
+    {{ form.as_p }}
+<input type="submit" value="Save Alias" />
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "cannula/base.html" %}
+
+{% block title %}Workflows{% endblock %}
+
+{% block content %}
+<div class="w3-panel">
+<p>
+	<a href="{% url 'data_workflow_new' %}">Create new workflow</a>
+</p>
+<table class="w3-table w3-border w3-bordered w3-small" border="1">
+<thead class="w3-grey">
+	<th>Filename</th><th>Uploaded At</th><th>Actions</th>
+</thead>
+<tbody>
+{% for wf in workflows %}
+<tr>
+	<td>{{ wf.orig_filename }}</td><td>{{ wf.uploaded_at }}</td>
+	<td><a href="{% url 'data_workflow_detail' %}?wf_id={{ wf.id }}">View Details</a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

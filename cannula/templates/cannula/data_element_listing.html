@@ -1,0 +1,7 @@
+{% if data_elements %}
+	<ul>
+	{% for de in data_elements %}
+		<li><a href="{% url 'de_summary' de.id %}">{{ de.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% endif %}
