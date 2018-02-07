@@ -1,0 +1,11 @@
+*.pyc
+# development database file
+db.sqlite3
+# uploaded file storage
+source_doc_storage/*
+# generated class diagrams
+rhites_ec_web_models*.png
+#vscode
+.vscode
+local_settings.py
+uwsgi_params

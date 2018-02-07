@@ -1,0 +1,19 @@
+#local settings
+ 
+DEBUG = True
+ 
+STATIC_URL = '/static/'
+
+ALLOWED_HOSTS = ['localhost']
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'localdb',
+        'USER': 'dbuser',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+        'ATOMIC_REQUESTS': True,
+    },
+}
